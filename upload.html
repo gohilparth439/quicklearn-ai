@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Upload Notes - QuickLearn AI</title>
+  <!-- Mozilla PDF.js for in-browser PDF text extraction -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <style>
     * {
       margin: 0;
@@ -152,7 +154,7 @@
 
     textarea {
       width: 100%;
-      height: 180px;
+      height: 200px;
       background-color: #0f172a;
       border: 1px solid #334155;
       border-radius: 8px;
@@ -283,7 +285,7 @@
 
   <main>
     <h1>Upload & Generate Summary</h1>
-    <p class="subtitle">Pick sample study notes or paste your own lecture text.</p>
+    <p class="subtitle">Pick sample study notes or paste/upload your own lecture text.</p>
 
     <div class="card">
       <div class="pill-group">
@@ -296,7 +298,7 @@
 
       <div class="section-title">1. Select File (PDF or Text)</div>
       <div class="dropzone" id="dropzoneText" onclick="document.getElementById('fileInput').click()">
-        📁 Click to browse or drop lecture files here
+        📁 Click to browse or drop lecture files (.pdf / .txt) here
       </div>
       <input type="file" id="fileInput" style="display:none" onchange="handleFileUpload(event)" accept=".txt,.pdf" />
 
@@ -332,6 +334,9 @@
   </main>
 
   <script>
+    // Initialize PDF.js worker
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
     const samples = {
       ds: "Binary Search Trees (BST) maintain sorted order where left child is smaller and right child is greater. Search, insert, and delete operations take O(log n) time average case and O(n) worst case. AVL trees and Red-Black trees self-balance to guarantee O(log n) operations.",
       dbms: "Database Management Systems (DBMS): Relational schemas define table structures, primary keys, and foreign keys. SQL queries use SELECT, JOIN, GROUP BY, and HAVING to retrieve structured datasets. ACID properties guarantee transaction reliability: Atomicity, Consistency, Isolation, and Durability. Normalization (1NF, 2NF, 3NF, BCNF) reduces data redundancy and prevents anomalies.",
@@ -344,34 +349,64 @@
       document.getElementById("dropzoneText").innerText = `📄 Loaded sample: ${type.toUpperCase()}`;
     }
 
-    function handleFileUpload(e) {
+    async function handleFileUpload(e) {
       const file = e.target.files[0];
       if (!file) return;
 
-      document.getElementById("dropzoneText").innerText = `📄 Uploaded: ${file.name}`;
+      const dropzone = document.getElementById("dropzoneText");
+      const notesArea = document.getElementById("notesInput");
+
+      dropzone.innerText = `⏳ Extracting text from ${file.name}...`;
+
       if (file.name.endsWith('.txt')) {
         const reader = new FileReader();
         reader.onload = (event) => {
-          document.getElementById("notesInput").value = event.target.result;
+          notesArea.value = event.target.result;
+          dropzone.innerText = `📄 Uploaded: ${file.name}`;
         };
         reader.readAsText(file);
-      } else {
-        document.getElementById("notesInput").value = `Extracted text from ${file.name}: Data definitions and structural concepts.`;
+      } else if (file.name.endsWith('.pdf')) {
+        try {
+          const arrayBuffer = await file.arrayBuffer();
+          const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+          let fullText = "";
+
+          // Read up to first 5 pages of the PDF
+          const maxPages = Math.min(pdf.numPages, 5);
+          for (let i = 1; i <= maxPages; i++) {
+            const page = await pdf.getPage(i);
+            const textContent = await page.getTextContent();
+            const pageText = textContent.items.map(item => item.str).join(" ");
+            fullText += pageText + "\n\n";
+          }
+
+          if (fullText.trim().length > 0) {
+            notesArea.value = fullText.trim();
+            dropzone.innerText = `✅ Loaded ${maxPages} page(s) from ${file.name}`;
+          } else {
+            alert("No text could be extracted from this PDF (it may contain scanned image scans). Please copy and paste the text directly.");
+            dropzone.innerText = `⚠️ Empty or scanned PDF: ${file.name}`;
+          }
+        } catch (err) {
+          console.error("PDF Parsing error:", err);
+          alert("Error reading PDF file. Try pasting the text manually.");
+          dropzone.innerText = `⚠️ Error reading ${file.name}`;
+        }
       }
     }
 
     async function generateSummary() {
       const text = document.getElementById("notesInput").value.trim();
       if (!text) {
-        alert("Please enter or paste study notes first!");
+        alert("Please paste lecture notes or upload a valid file first!");
         return;
       }
 
-      // CRITICAL: Store the notes so Quiz & Flashcards load dynamic questions!
+      // CRITICAL: Save current notes into localStorage for Quiz and Flashcards
       localStorage.setItem("studyText", text);
 
       const genBtn = document.getElementById("genBtn");
-      genBtn.innerText = "⏳ Synthesizing Notes...";
+      genBtn.innerText = "⏳ Generating AI Summary...";
       genBtn.disabled = true;
 
       let overview = "";
@@ -389,12 +424,16 @@
         overview = data.overview;
         takeaways = data.keyPoints;
       } catch (err) {
-        // Dynamic client-side synthesis from whatever user typed
-        overview = text.slice(0, 220) + (text.length > 220 ? "..." : "");
-        const sentences = text.split(/[.?!]\s+/).filter(s => s.trim().length > 15);
-        takeaways = sentences.slice(0, 3).map(s => s.trim());
+        // Dynamic client-side synthesis directly from whatever was typed or extracted
+        overview = text.slice(0, 260) + (text.length > 260 ? "..." : "");
+        const sentences = text
+          .split(/[.?!]\s+/)
+          .map(s => s.trim())
+          .filter(s => s.length > 20);
+
+        takeaways = sentences.slice(0, 4);
         if (takeaways.length === 0) {
-          takeaways = ["Core subject definitions and key terms.", "Direct concept reinforcement for exam revision."];
+          takeaways = ["Core subject concepts and lecture highlights.", "Exam preparation key points."];
         }
       }
 
@@ -412,7 +451,7 @@
       genBtn.innerText = "✨ Generate AI Summary";
       genBtn.disabled = false;
 
-      // Update Dashboard metrics in localStorage
+      // Update session statistics
       let processed = parseInt(localStorage.getItem("notesProcessed") || "0", 10);
       let summaries = parseInt(localStorage.getItem("summariesCreated") || "0", 10);
       localStorage.setItem("notesProcessed", processed + 1);
