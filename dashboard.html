@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard - QuickLearn AI</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #0f172a;
+      color: #f8fafc;
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* Sidebar Navigation */
+    aside {
+      width: 240px;
+      background-color: #1e293b;
+      border-right: 1px solid #334155;
+      display: flex;
+      flex-direction: column;
+      padding: 24px 16px;
+    }
+
+    .brand {
+      font-size: 20px;
+      font-weight: bold;
+      color: #38bdf8;
+      margin-bottom: 32px;
+      padding-left: 8px;
+    }
+
+    nav {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex-grow: 1;
+    }
+
+    nav a {
+      color: #94a3b8;
+      text-decoration: none;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: 0.2s;
+    }
+
+    nav a.active, nav a:hover {
+      background-color: #0f172a;
+      color: #38bdf8;
+    }
+
+    .logout-btn {
+      color: #ef4444;
+      text-decoration: none;
+      font-size: 14px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid #ef444433;
+      text-align: center;
+    }
+
+    .logout-btn:hover {
+      background-color: #ef44441a;
+    }
+
+    /* Main Area */
+    main {
+      flex: 1;
+      padding: 36px 40px;
+      overflow-y: auto;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+
+    .top-bar h1 {
+      font-size: 26px;
+    }
+
+    .user-pill {
+      background: #1e293b;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      border: 1px solid #334155;
+    }
+
+    /* Dynamic Metrics Grid */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 18px;
+      margin-bottom: 36px;
+    }
+
+    .metric-card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    .metric-card span {
+      font-size: 13px;
+      color: #94a3b8;
+    }
+
+    .metric-card h3 {
+      font-size: 28px;
+      margin-top: 6px;
+      color: #38bdf8;
+    }
+
+    /* Modules Quick Launch */
+    h2 {
+      font-size: 18px;
+      margin-bottom: 16px;
+    }
+
+    .modules-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    .module-card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 24px;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .module-card:hover {
+      transform: translateY(-4px);
+      border-color: #38bdf8;
+    }
+
+    .module-icon {
+      font-size: 30px;
+    }
+
+    .module-card h4 {
+      font-size: 16px;
+      color: #f8fafc;
+    }
+
+    .module-card p {
+      font-size: 13px;
+      color: #94a3b8;
+      line-height: 1.4;
+    }
+
+    .action-text {
+      font-size: 13px;
+      color: #38bdf8;
+      font-weight: bold;
+      margin-top: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Sidebar -->
+  <aside>
+    <div class="brand">QuickLearn AI</div>
+    <nav>
+      <a href="dashboard.html" class="active">📊 Overview</a>
+      <a href="upload.html">📤 Upload Notes</a>
+      <a href="quiz.html">📝 AI Quiz</a>
+      <a href="flashcards.html">⚡ Flashcards</a>
+    </nav>
+    <a href="index.html" class="logout-btn">Log Out</a>
+  </aside>
+
+  <!-- Main Content -->
+  <main>
+    <div class="top-bar">
+      <div>
+        <h1>Welcome, Student! 👋</h1>
+        <p style="color: #94a3b8; font-size: 14px; margin-top: 4px;">Ready to study your notes today?</p>
+      </div>
+      <div class="user-pill">📚 Study Mode Active</div>
+    </div>
+
+    <!-- Dynamic Metrics Display -->
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <span>Notes Processed</span>
+        <h3 id="statNotes">0</h3>
+      </div>
+      <div class="metric-card">
+        <span>Summaries Created</span>
+        <h3 id="statSummaries">0</h3>
+      </div>
+      <div class="metric-card">
+        <span>Quizzes Completed</span>
+        <h3 id="statQuizzes">0</h3>
+      </div>
+      <div class="metric-card">
+        <span>Cards Mastered</span>
+        <h3 id="statCards">10</h3>
+      </div>
+    </div>
+
+    <!-- Core Actions -->
+    <h2>Study Tools</h2>
+    <div class="modules-grid">
+      <a href="upload.html" class="module-card">
+        <div class="module-icon">📄</div>
+        <h4>Upload New Notes</h4>
+        <p>Drop a PDF or paste lecture notes to generate flashcards and summaries.</p>
+        <span class="action-text">Upload PDF →</span>
+      </a>
+
+      <a href="quiz.html" class="module-card">
+        <div class="module-icon">🎯</div>
+        <h4>Start AI Quiz</h4>
+        <p>Test your knowledge with 10 generated multiple-choice practice questions.</p>
+        <span class="action-text">Take Quiz →</span>
+      </a>
+
+      <a href="flashcards.html" class="module-card">
+        <div class="module-icon">⚡</div>
+        <h4>Practice Flashcards</h4>
+        <p>Flip through active-recall cards to retain key concepts and terms.</p>
+        <span class="action-text">Start Review →</span>
+      </a>
+    </div>
+  </main>
+
+  <script>
+    // Load dynamic activity counts from localStorage
+    const savedNotes = localStorage.getItem("studyText");
+    const quizCount = localStorage.getItem("quizCompleted");
+
+    if (savedNotes) {
+      document.getElementById("statNotes").innerText = "1";
+      document.getElementById("statSummaries").innerText = "1";
+    }
+
+    if (quizCount) {
+      document.getElementById("statQuizzes").innerText = quizCount;
+    }
+  </script>
+
+</body>
+</html>
