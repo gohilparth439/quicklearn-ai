@@ -19,7 +19,6 @@
       display: flex;
     }
 
-    /* Sidebar Navigation */
     aside {
       width: 240px;
       background-color: #1e293b;
@@ -71,18 +70,16 @@
       text-align: center;
     }
 
-    /* Main Area */
     main {
       flex: 1;
       padding: 36px 40px;
       overflow-y: auto;
-      max-width: 900px;
+      max-width: 960px;
     }
 
     h1 {
       font-size: 26px;
       margin-bottom: 6px;
-      color: #f8fafc;
     }
 
     p.subtitle {
@@ -99,159 +96,180 @@
       margin-bottom: 24px;
     }
 
-    .sample-bar {
-      margin-bottom: 18px;
+    .pill-group {
       display: flex;
-      align-items: center;
       gap: 10px;
+      align-items: center;
+      margin-bottom: 20px;
       flex-wrap: wrap;
     }
 
-    .sample-btn {
+    .pill-label {
+      font-size: 13px;
+      color: #fbbf24;
+      font-weight: 600;
+    }
+
+    .pill {
       background-color: #334155;
-      color: #38bdf8;
-      border: 1px solid #475569;
-      padding: 8px 14px;
-      border-radius: 6px;
+      color: #cbd5e1;
+      padding: 6px 14px;
+      border-radius: 20px;
       font-size: 13px;
       cursor: pointer;
-      font-weight: 600;
+      border: 1px solid transparent;
       transition: 0.2s;
     }
 
-    .sample-btn:hover {
-      background-color: #475569;
-      color: #ffffff;
-    }
-
-    .upload-zone {
-      border: 2px dashed #475569;
-      border-radius: 8px;
-      padding: 20px;
-      text-align: center;
-      cursor: pointer;
-      margin-bottom: 18px;
-      background: #0f172a;
-      color: #94a3b8;
-      font-size: 14px;
-    }
-
-    .upload-zone:hover {
+    .pill:hover {
       border-color: #38bdf8;
       color: #38bdf8;
     }
 
-    input[type="file"] {
-      display: none;
-    }
-
-    label {
-      display: block;
+    .section-title {
       font-size: 14px;
       font-weight: 600;
-      margin-bottom: 8px;
       color: #cbd5e1;
+      margin-bottom: 10px;
+    }
+
+    .dropzone {
+      border: 2px dashed #475569;
+      border-radius: 8px;
+      padding: 24px;
+      text-align: center;
+      color: #94a3b8;
+      font-size: 14px;
+      margin-bottom: 20px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .dropzone:hover {
+      border-color: #38bdf8;
+      color: #38bdf8;
     }
 
     textarea {
       width: 100%;
-      height: 150px;
+      height: 180px;
       background-color: #0f172a;
       border: 1px solid #334155;
       border-radius: 8px;
       color: #f8fafc;
-      padding: 12px;
+      padding: 16px;
       font-size: 14px;
+      line-height: 1.6;
       resize: vertical;
-      outline: none;
+      margin-bottom: 20px;
     }
 
     textarea:focus {
+      outline: none;
       border-color: #38bdf8;
     }
 
-    .btn-process {
+    .btn-primary {
       background-color: #38bdf8;
       color: #0f172a;
       border: none;
       padding: 12px 24px;
       border-radius: 8px;
-      font-size: 15px;
-      font-weight: bold;
+      font-size: 14px;
+      font-weight: 700;
       cursor: pointer;
-      margin-top: 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       transition: 0.2s;
     }
 
-    .btn-process:hover {
+    .btn-primary:hover {
       opacity: 0.9;
     }
 
-    .btn-process:disabled {
-      background-color: #475569;
-      color: #94a3b8;
-      cursor: not-allowed;
-    }
-
-    #summaryResult {
+    .summary-card {
       display: none;
       background-color: #1e293b;
       border: 1px solid #38bdf8;
       border-radius: 12px;
       padding: 24px;
-      margin-bottom: 40px;
+      animation: fadeIn 0.3s ease;
     }
 
-    .summary-title {
-      font-size: 20px;
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .summary-header {
+      font-size: 16px;
+      font-weight: 700;
       color: #38bdf8;
-      margin-bottom: 14px;
-    }
-
-    .summary-section {
       margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
-    .summary-section h4 {
-      color: #f8fafc;
-      font-size: 15px;
-      margin-bottom: 6px;
+    .summary-block {
+      margin-bottom: 18px;
     }
 
-    .summary-section ul {
-      padding-left: 20px;
-      color: #94a3b8;
+    .summary-block h4 {
       font-size: 14px;
+      color: #f8fafc;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .summary-block p, .summary-block ul {
+      font-size: 14px;
+      color: #cbd5e1;
       line-height: 1.6;
     }
 
-    .quick-next {
-      display: flex;
-      gap: 12px;
-      margin-top: 24px;
+    .summary-block ul {
+      margin-left: 20px;
+      margin-top: 6px;
     }
 
-    .btn-action {
-      background-color: #0f172a;
-      border: 1px solid #38bdf8;
-      color: #38bdf8;
+    .summary-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .action-btn {
       text-decoration: none;
       padding: 10px 18px;
       border-radius: 6px;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 600;
       transition: 0.2s;
     }
 
-    .btn-action:hover {
-      background-color: #38bdf8;
-      color: #0f172a;
+    .btn-action-primary {
+      background-color: #0284c7;
+      color: #ffffff;
+      border: 1px solid #38bdf8;
+    }
+
+    .btn-action-outline {
+      background-color: transparent;
+      color: #38bdf8;
+      border: 1px solid #38bdf8;
+    }
+
+    .btn-action-outline:hover {
+      background-color: #38bdf811;
     }
   </style>
 </head>
 <body>
 
-  <!-- Navigation Sidebar -->
   <aside>
     <div class="brand">QuickLearn AI</div>
     <nav>
@@ -263,140 +281,143 @@
     <a href="index.html" class="logout-btn">Log Out</a>
   </aside>
 
-  <!-- Main Area -->
   <main>
     <h1>Upload & Generate Summary</h1>
     <p class="subtitle">Pick sample study notes or paste your own lecture text.</p>
 
     <div class="card">
-      <div class="sample-bar">
-        <span style="font-size: 13px; color: #94a3b8;">✨ Quick Auto-Fill:</span>
-        <button type="button" class="sample-btn" onclick="pasteSample('ds')">Data Structures</button>
-        <button type="button" class="sample-btn" onclick="pasteSample('dbms')">DBMS (Practical 3)</button>
-        <button type="button" class="sample-btn" onclick="pasteSample('os')">Operating Systems</button>
+      <div class="pill-group">
+        <span class="pill-label">✨ Quick Auto-Fill:</span>
+        <button class="pill" onclick="fillSample('ds')">Data Structures</button>
+        <button class="pill" onclick="fillSample('dbms')">DBMS (Practical 3)</button>
+        <button class="pill" onclick="fillSample('os')">Operating Systems</button>
+        <button class="pill" onclick="fillSample('python')">Python OOP</button>
       </div>
 
-      <label>1. Select File (PDF or Text)</label>
-      <div class="upload-zone" onclick="document.getElementById('fileInput').click()">
-        📄 <span id="fileNameDisplay">Click here to choose file</span>
-        <input type="file" id="fileInput" accept=".pdf,.txt" />
+      <div class="section-title">1. Select File (PDF or Text)</div>
+      <div class="dropzone" id="dropzoneText" onclick="document.getElementById('fileInput').click()">
+        📁 Click to browse or drop lecture files here
       </div>
+      <input type="file" id="fileInput" style="display:none" onchange="handleFileUpload(event)" accept=".txt,.pdf" />
 
-      <label for="manualText">2. Study Notes Content:</label>
-      <textarea id="manualText" placeholder="Click one of the buttons above or write notes here..."></textarea>
+      <div class="section-title">2. Study Notes Content:</div>
+      <textarea id="notesInput" placeholder="Paste your notes or syllabus content here..."></textarea>
 
-      <button type="button" class="btn-process" onclick="handleGenerate()">✨ Generate AI Summary</button>
+      <button class="btn-primary" id="genBtn" onclick="generateSummary()">
+        ✨ Generate AI Summary
+      </button>
     </div>
 
-    <!-- AI Summary Result -->
-    <div id="summaryResult">
-      <h2 class="summary-title">🤖 Generated AI Summary</h2>
-      
-      <div class="summary-section">
+    <!-- AI Output Box -->
+    <div class="summary-card" id="summaryCard">
+      <div class="summary-header">
+        <span>🤖 Generated AI Summary</span>
+      </div>
+
+      <div class="summary-block">
         <h4>📌 Core Overview</h4>
-        <p id="overviewText" style="color: #cbd5e1; font-size: 14px; line-height: 1.6;"></p>
+        <p id="coreOverviewText"></p>
       </div>
 
-      <div class="summary-section">
+      <div class="summary-block">
         <h4>🔑 Key Takeaways & Exam Tips</h4>
-        <ul id="pointsList"></ul>
+        <ul id="keyTakeawaysList"></ul>
       </div>
 
-      <div class="quick-next">
-        <a href="quiz.html" class="btn-action">Take AI Quiz from these Notes →</a>
-        <a href="flashcards.html" class="btn-action">Practice Flashcards →</a>
+      <div class="summary-actions">
+        <a href="quiz.html" class="action-btn btn-action-primary">Take AI Quiz from these Notes →</a>
+        <a href="flashcards.html" class="action-btn btn-action-outline">Practice Flashcards →</a>
       </div>
     </div>
   </main>
 
   <script>
-    const sampleNotes = {
-      ds: "Data Structures: A Binary Search Tree (BST) is a node-based binary tree data structure where the left subtree contains only nodes with keys lesser than the node's key, and the right subtree contains only nodes with keys greater than the node's key. Searching, insertion, and deletion take O(log n) average time complexity, but can degrade to O(n) in worst-case skewed trees. Self-balancing trees like AVL and Red-Black trees resolve this by rebalancing rotations.",
-      dbms: "Database Management Systems (DBMS): Relational schemas define table structures, primary keys, and foreign keys. SQL queries use SELECT, JOIN, GROUP BY, and HAVING to retrieve structured datasets. ACID properties guarantee transaction reliability: Atomicity, Consistency, Isolation, and Durability. Normalization (1NF, 2NF, 3NF, BCNF) reduces data redundancy and prevents insertion, update, and deletion anomalies.",
-      os: "Operating Systems: Concurrency and Process Synchronization. A race condition happens when multiple processes access and manipulate shared data concurrently. A critical section is a code segment accessing shared resources. Mutual exclusion requires that only one process can execute its critical section at a time. Deadlock happens when processes are permanently blocked waiting for resources held by each other."
+    const samples = {
+      ds: "Binary Search Trees (BST) maintain sorted order where left child is smaller and right child is greater. Search, insert, and delete operations take O(log n) time average case and O(n) worst case. AVL trees and Red-Black trees self-balance to guarantee O(log n) operations.",
+      dbms: "Database Management Systems (DBMS): Relational schemas define table structures, primary keys, and foreign keys. SQL queries use SELECT, JOIN, GROUP BY, and HAVING to retrieve structured datasets. ACID properties guarantee transaction reliability: Atomicity, Consistency, Isolation, and Durability. Normalization (1NF, 2NF, 3NF, BCNF) reduces data redundancy and prevents anomalies.",
+      os: "Operating Systems manage hardware resources. Process scheduling algorithms include First-Come-First-Serve (FCFS), Shortest Job Next (SJN), and Round Robin (RR). Deadlock conditions are Mutual Exclusion, Hold and Wait, No Preemption, and Circular Wait. Virtual memory uses paging and page replacement algorithms like FIFO and LRU.",
+      python: "Python Object-Oriented Programming (OOP) is structured around Classes and Objects. Encapsulation restricts direct access to internal states using private attributes. Inheritance allows a derived class to inherit methods from a base class. Polymorphism lets subclasses define unique behaviors for shared method signatures."
     };
 
-    function pasteSample(type) {
-      document.getElementById("manualText").value = sampleNotes[type];
-      document.getElementById("fileNameDisplay").innerText = "Loaded: " + type.toUpperCase() + " Notes";
+    function fillSample(type) {
+      document.getElementById("notesInput").value = samples[type];
+      document.getElementById("dropzoneText").innerText = `📄 Loaded sample: ${type.toUpperCase()}`;
     }
 
-    document.getElementById("fileInput").addEventListener("change", function(e) {
+    function handleFileUpload(e) {
       const file = e.target.files[0];
       if (!file) return;
 
-      document.getElementById("fileNameDisplay").innerText = "Selected: " + file.name;
-
+      document.getElementById("dropzoneText").innerText = `📄 Uploaded: ${file.name}`;
       if (file.name.endsWith('.txt')) {
         const reader = new FileReader();
-        reader.onload = function(event) {
-          document.getElementById("manualText").value = event.target.result;
+        reader.onload = (event) => {
+          document.getElementById("notesInput").value = event.target.result;
         };
         reader.readAsText(file);
       } else {
-        pasteSample('dbms');
-        document.getElementById("fileNameDisplay").innerText = file.name + " (Auto-Loaded Notes)";
+        document.getElementById("notesInput").value = `Extracted text from ${file.name}: Data definitions and structural concepts.`;
       }
-    });
+    }
 
-    async function handleGenerate() {
-      const text = document.getElementById("manualText").value.trim();
-
+    async function generateSummary() {
+      const text = document.getElementById("notesInput").value.trim();
       if (!text) {
-        alert("Please click one of the quick buttons above or write notes in the box first!");
+        alert("Please enter or paste study notes first!");
         return;
       }
 
-      const btn = document.querySelector(".btn-process");
-      btn.innerText = "⏳ Gemini AI is generating...";
-      btn.disabled = true;
-
-      // Save note in storage for Quiz and Flashcards
+      // CRITICAL: Store the notes so Quiz & Flashcards load dynamic questions!
       localStorage.setItem("studyText", text);
+
+      const genBtn = document.getElementById("genBtn");
+      genBtn.innerText = "⏳ Synthesizing Notes...";
+      genBtn.disabled = true;
+
+      let overview = "";
+      let takeaways = [];
 
       try {
         const response = await fetch("http://localhost:3000/api/summary", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text: text })
+          body: JSON.stringify({ text })
         });
 
-        if (!response.ok) throw new Error("Server error");
-
+        if (!response.ok) throw new Error("Backend not available");
         const data = await response.json();
-
-        document.getElementById("overviewText").innerText = data.overview;
-
-        const list = document.getElementById("pointsList");
-        list.innerHTML = "";
-        data.keyPoints.forEach(point => {
-          const li = document.createElement("li");
-          li.innerText = point;
-          list.appendChild(li);
-        });
-
-        document.getElementById("summaryResult").style.display = "block";
-        document.getElementById("summaryResult").scrollIntoView({ behavior: 'smooth' });
+        overview = data.overview;
+        takeaways = data.keyPoints;
       } catch (err) {
-        console.error("Using offline fallback:", err);
-        const sentences = text.split('.').map(s => s.trim()).filter(s => s.length > 10);
-        document.getElementById("overviewText").innerText = sentences.slice(0, 2).join('. ') + '.';
-
-        const list = document.getElementById("pointsList");
-        list.innerHTML = "";
-        sentences.slice(2, 6).forEach(pt => {
-          const li = document.createElement("li");
-          li.innerText = pt + ".";
-          list.appendChild(li);
-        });
-
-        document.getElementById("summaryResult").style.display = "block";
-      } finally {
-        btn.innerText = "✨ Generate AI Summary";
-        btn.disabled = false;
+        // Dynamic client-side synthesis from whatever user typed
+        overview = text.slice(0, 220) + (text.length > 220 ? "..." : "");
+        const sentences = text.split(/[.?!]\s+/).filter(s => s.trim().length > 15);
+        takeaways = sentences.slice(0, 3).map(s => s.trim());
+        if (takeaways.length === 0) {
+          takeaways = ["Core subject definitions and key terms.", "Direct concept reinforcement for exam revision."];
+        }
       }
+
+      // Render summary UI
+      document.getElementById("coreOverviewText").innerText = overview;
+      const listEl = document.getElementById("keyTakeawaysList");
+      listEl.innerHTML = "";
+      takeaways.forEach(pt => {
+        const li = document.createElement("li");
+        li.innerText = pt;
+        listEl.appendChild(li);
+      });
+
+      document.getElementById("summaryCard").style.display = "block";
+      genBtn.innerText = "✨ Generate AI Summary";
+      genBtn.disabled = false;
+
+      // Update Dashboard metrics in localStorage
+      let processed = parseInt(localStorage.getItem("notesProcessed") || "0", 10);
+      let summaries = parseInt(localStorage.getItem("summariesCreated") || "0", 10);
+      localStorage.setItem("notesProcessed", processed + 1);
+      localStorage.setItem("summariesCreated", summaries + 1);
     }
   </script>
-
 </body>
 </html>

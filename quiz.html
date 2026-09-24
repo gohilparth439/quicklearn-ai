@@ -19,7 +19,6 @@
       display: flex;
     }
 
-    /* Sidebar Navigation */
     aside {
       width: 240px;
       background-color: #1e293b;
@@ -71,11 +70,11 @@
       text-align: center;
     }
 
-    /* Main Area */
     main {
       flex: 1;
       padding: 36px 40px;
-      max-width: 800px;
+      overflow-y: auto;
+      max-width: 900px;
     }
 
     h1 {
@@ -89,135 +88,105 @@
       margin-bottom: 24px;
     }
 
-    .quiz-card {
+    .card {
       background-color: #1e293b;
       border: 1px solid #334155;
       border-radius: 12px;
       padding: 28px;
-    }
-
-    /* Progress Bar */
-    .progress-bar-container {
-      background: #0f172a;
-      border-radius: 10px;
-      height: 8px;
-      width: 100%;
       margin-bottom: 24px;
-      overflow: hidden;
     }
 
-    .progress-fill {
-      background: #38bdf8;
-      height: 100%;
-      width: 10%;
-      transition: width 0.3s;
-    }
-
-    .question-badge {
-      font-size: 13px;
+    .q-meta {
+      display: flex;
+      justify-content: space-between;
       color: #38bdf8;
-      font-weight: 700;
-      margin-bottom: 8px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 12px;
     }
 
-    .question-title {
-      font-size: 19px;
-      margin-bottom: 24px;
-      line-height: 1.5;
+    .question-text {
+      font-size: 18px;
+      font-weight: 600;
       color: #f8fafc;
+      margin-bottom: 20px;
+      line-height: 1.5;
     }
 
-    .options-grid {
+    .options {
       display: flex;
       flex-direction: column;
       gap: 12px;
       margin-bottom: 20px;
     }
 
-    .option-btn {
-      background: #0f172a;
+    .opt-btn {
+      background-color: #0f172a;
       border: 1px solid #334155;
-      color: #f8fafc;
+      color: #cbd5e1;
       padding: 14px 18px;
       border-radius: 8px;
-      text-align: left;
       font-size: 15px;
+      text-align: left;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: 0.2s;
     }
 
-    .option-btn:hover {
+    .opt-btn:hover:not(:disabled) {
       border-color: #38bdf8;
-      background: #1e293b;
+      background-color: #1e293b;
     }
 
-    .option-btn.correct {
-      border-color: #22c55e !important;
-      background: #22c55e22 !important;
-      color: #22c55e !important;
-      font-weight: bold;
+    .opt-btn.correct {
+      background-color: #064e3b;
+      border-color: #10b981;
+      color: #a7f3d0;
     }
 
-    .option-btn.wrong {
-      border-color: #ef4444 !important;
-      background: #ef444422 !important;
-      color: #ef4444 !important;
-      font-weight: bold;
+    .opt-btn.wrong {
+      background-color: #7f1d1d;
+      border-color: #ef4444;
+      color: #fecaca;
     }
 
     .explanation-box {
       display: none;
-      background: #0f172a;
+      background-color: #0f172a;
       border-left: 4px solid #38bdf8;
       padding: 14px 18px;
-      border-radius: 6px;
-      margin-bottom: 20px;
+      border-radius: 4px;
       font-size: 14px;
       color: #cbd5e1;
+      margin-bottom: 20px;
       line-height: 1.5;
     }
 
+    .nav-controls {
+      display: flex;
+      justify-content: flex-end;
+    }
+
     .btn-next {
-      display: none;
-      background: #38bdf8;
+      background-color: #38bdf8;
       color: #0f172a;
       border: none;
-      font-weight: bold;
-      padding: 12px 24px;
+      padding: 10px 22px;
       border-radius: 6px;
+      font-size: 14px;
+      font-weight: bold;
       cursor: pointer;
-      font-size: 15px;
-      transition: opacity 0.2s;
+      display: none;
     }
 
-    .btn-next:hover {
-      opacity: 0.9;
-    }
-
-    /* Score Result Screen */
-    #scoreScreen {
+    .result-box {
       display: none;
       text-align: center;
       padding: 40px 20px;
     }
 
-    #scoreScreen h2 {
-      font-size: 28px;
-      color: #38bdf8;
-      margin-bottom: 12px;
-    }
-
-    #scoreScreen p {
-      font-size: 16px;
-      color: #94a3b8;
-      margin-bottom: 28px;
-    }
-
     .score-circle {
-      width: 110px;
-      height: 110px;
+      width: 120px;
+      height: 120px;
       border-radius: 50%;
       border: 4px solid #38bdf8;
       display: flex;
@@ -225,26 +194,22 @@
       justify-content: center;
       font-size: 28px;
       font-weight: bold;
-      color: #38bdf8;
       margin: 0 auto 20px;
+      color: #38bdf8;
     }
 
-    .action-row {
-      display: flex;
-      justify-content: center;
-      gap: 16px;
-    }
-
-    .btn-link {
-      background: #38bdf8;
+    .btn-restart {
+      background-color: #38bdf8;
       color: #0f172a;
-      text-decoration: none;
-      font-weight: bold;
+      border: none;
       padding: 10px 20px;
       border-radius: 6px;
       font-size: 14px;
-      border: none;
+      font-weight: bold;
       cursor: pointer;
+      margin: 10px 6px;
+      text-decoration: none;
+      display: inline-block;
     }
   </style>
 </head>
@@ -263,180 +228,176 @@
 
   <main>
     <h1>AI-Generated Practice Quiz</h1>
-    <p class="subtitle">10 multiple-choice questions to test your understanding</p>
+    <p class="subtitle" id="quizSubtitle">Synthesizing practice questions from your active notes...</p>
 
-    <div class="quiz-card" id="quizContainer">
-      <div class="progress-bar-container">
-        <div class="progress-fill" id="progressFill"></div>
+    <div class="card" id="quizCard">
+      <div class="q-meta">
+        <span id="questionCounter">Question 1 of 5</span>
+        <span id="scoreCounter">Score: 0</span>
       </div>
 
-      <div class="question-badge" id="questionCounter">Question 1 of 10</div>
-      <div class="question-title" id="questionText">Loading question...</div>
+      <div class="question-text" id="questionText">Generating questions...</div>
 
-      <div class="options-grid" id="optionsContainer"></div>
+      <div class="options" id="optionsContainer"></div>
 
-      <div class="explanation-box" id="explanationText"></div>
+      <div class="explanation-box" id="explanationBox"></div>
 
-      <button class="btn-next" id="nextBtn" onclick="nextQuestion()">Next Question →</button>
+      <div class="nav-controls">
+        <button class="btn-next" id="nextBtn" onclick="nextQuestion()">Next Question →</button>
+      </div>
     </div>
 
-    <!-- Final Score Display -->
-    <div class="quiz-card" id="scoreScreen">
-      <div class="score-circle" id="scoreCircle">0/10</div>
-      <h2>Great Effort! 🎉</h2>
-      <p id="scoreSummary">You have completed the full quiz.</p>
-      
-      <div class="action-row">
-        <button class="btn-link" onclick="restartQuiz()">Retake Quiz</button>
-        <a href="flashcards.html" class="btn-link" style="background:#0f172a; color:#38bdf8; border:1px solid #38bdf8;">Study Flashcards →</a>
-      </div>
+    <!-- Final Results Box -->
+    <div class="card result-box" id="resultBox">
+      <div class="score-circle" id="finalScore">0/0</div>
+      <h2 style="margin-bottom: 8px;">Great Effort! 🎉</h2>
+      <p style="color: #94a3b8; margin-bottom: 24px;" id="resultMessage">You have completed the quiz.</p>
+      <button class="btn-restart" onclick="restartQuiz()">Retake Quiz</button>
+      <a href="flashcards.html" class="btn-restart" style="background-color: #0f172a; color: #38bdf8; border: 1px solid #38bdf8;">Study Flashcards →</a>
     </div>
   </main>
 
   <script>
-    const questions = [
-      {
-        q: "What does the 'A' represent in the ACID transaction properties?",
-        opts: ["Availability", "Atomicity", "Accuracy", "Authentication"],
-        correct: 1,
-        exp: "Atomicity ensures that all statements in a transaction execute completely or roll back entirely."
-      },
-      {
-        q: "Which normal form removes partial dependency on a composite key?",
-        opts: ["First Normal Form (1NF)", "Second Normal Form (2NF)", "Third Normal Form (3NF)", "Boyce-Codd Normal Form (BCNF)"],
-        correct: 1,
-        exp: "2NF eliminates partial dependency by ensuring all non-key attributes depend on the entire primary key."
-      },
-      {
-        q: "What is the average search time complexity of a balanced Binary Search Tree (BST)?",
-        opts: ["O(1)", "O(n)", "O(log n)", "O(n log n)"],
-        correct: 2,
-        exp: "Because the search space is halved at each step, balanced BST operations take O(log n) time."
-      },
-      {
-        q: "What happens during a race condition in process concurrency?",
-        opts: ["Processes run sequentially", "Multiple threads access shared data concurrently without synchronization", "Memory runs out completely", "All processes terminate"],
-        correct: 1,
-        exp: "A race condition occurs when concurrent processes read/write shared data without proper mutual exclusion."
-      },
-      {
-        q: "Which ACID property ensures committed data survives unexpected power loss or crashes?",
-        opts: ["Consistency", "Durability", "Isolation", "Atomicity"],
-        correct: 1,
-        exp: "Durability guarantees that once a transaction commits, its state is written to non-volatile storage."
-      },
-      {
-        q: "Which data structure operates on a Last-In, First-Out (LIFO) basis?",
-        opts: ["Queue", "Stack", "Binary Tree", "Graph"],
-        correct: 1,
-        exp: "A Stack operates on LIFO (used in function call stacks and undo mechanisms)."
-      },
-      {
-        q: "Which SQL clause is used to filter records after aggregation with GROUP BY?",
-        opts: ["WHERE", "ORDER BY", "HAVING", "LIMIT"],
-        correct: 2,
-        exp: "HAVING filters aggregated grouped results, whereas WHERE filters individual rows before grouping."
-      },
-      {
-        q: "What is mutual exclusion in Operating Systems?",
-        opts: ["Only one process can execute in its critical section at a time", "All processes run simultaneously", "Memory is divided equally", "Threads share all variables"],
-        correct: 0,
-        exp: "Mutual exclusion ensures that no two processes can enter their critical section at the same time."
-      },
-      {
-        q: "What uniquely identifies each record in a relational database table?",
-        opts: ["Foreign Key", "Index Key", "Primary Key", "Composite Column"],
-        correct: 2,
-        exp: "A primary key uniquely identifies every row (tuple) in a relational table."
-      },
-      {
-        q: "Which tree self-balances its height using tree rotations?",
-        opts: ["Skewed Tree", "Trie", "AVL Tree", "Array Tree"],
-        correct: 2,
-        exp: "AVL trees perform left and right rotations to maintain a height balance factor between -1 and +1."
-      }
-    ];
-
-    let currentQuestion = 0;
+    let questions = [];
+    let currentIndex = 0;
     let score = 0;
-    let answered = false;
 
-    function renderQuestion() {
-      answered = false;
-      const q = questions[currentQuestion];
+    // Dynamically builds questions from any provided note content
+    function createDynamicQuestions(text) {
+      const sentences = text
+        .split(/[.?!]\s+/)
+        .map(s => s.trim())
+        .filter(s => s.length > 20);
 
-      document.getElementById('questionCounter').innerText = `Question ${currentQuestion + 1} of ${questions.length}`;
-      document.getElementById('questionText').innerText = q.q;
-      document.getElementById('progressFill').style.width = `${((currentQuestion + 1) / questions.length) * 100}%`;
+      if (sentences.length === 0) {
+        return [
+          {
+            question: `What is the core focus of your uploaded note?`,
+            options: [text.slice(0, 35) + "...", "System Design", "Algorithms", "General Principles"],
+            answer: 0,
+            explanation: `Derived from your input: ${text.slice(0, 80)}...`
+          }
+        ];
+      }
 
-      document.getElementById('nextBtn').style.display = 'none';
-      document.getElementById('explanationText').style.display = 'none';
+      const generated = [];
 
-      const container = document.getElementById('optionsContainer');
-      container.innerHTML = "";
+      sentences.slice(0, 5).forEach((sentence, idx) => {
+        const words = sentence.split(/\s+/).filter(w => w.length > 4 && !/^(which|where|their|there|about|these|those)/i.test(w));
+        const chosen = words[Math.floor(words.length / 2)] || "concept";
+        const cleanWord = chosen.replace(/[^a-zA-Z0-9]/g, "");
+        const blanked = sentence.replace(new RegExp(cleanWord, "i"), "_______");
 
-      q.opts.forEach((opt, idx) => {
+        const distractors = [
+          cleanWord,
+          "Variable " + (idx + 1),
+          "Secondary property",
+          "External parameter"
+        ].sort(() => Math.random() - 0.5);
+
+        generated.push({
+          question: `According to your current note: "${blanked}" — What belongs in the blank?`,
+          options: distractors,
+          answer: distractors.indexOf(cleanWord),
+          explanation: `Context from your note: "${sentence}."`
+        });
+      });
+
+      return generated;
+    }
+
+    async function loadQuiz() {
+      const currentNotes = localStorage.getItem("studyText") || "Database Management Systems and Operating Systems.";
+
+      try {
+        const response = await fetch("http://localhost:3000/api/quiz", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: currentNotes })
+        });
+        if (!response.ok) throw new Error();
+        questions = await response.json();
+      } catch (err) {
+        questions = createDynamicQuestions(currentNotes);
+      }
+
+      document.getElementById("quizSubtitle").innerText = `Generated from your active notes (${questions.length} questions)`;
+      currentIndex = 0;
+      score = 0;
+      displayQuestion();
+    }
+
+    function displayQuestion() {
+      if (!questions.length) return;
+      const q = questions[currentIndex];
+
+      document.getElementById("questionCounter").innerText = `Question ${currentIndex + 1} of ${questions.length}`;
+      document.getElementById("scoreCounter").innerText = `Score: ${score}`;
+      document.getElementById("questionText").innerText = q.question;
+
+      const optsBox = document.getElementById("optionsContainer");
+      optsBox.innerHTML = "";
+
+      const expBox = document.getElementById("explanationBox");
+      expBox.style.display = "none";
+      expBox.innerText = "";
+
+      document.getElementById("nextBtn").style.display = "none";
+
+      q.options.forEach((opt, idx) => {
         const btn = document.createElement("button");
-        btn.className = "option-btn";
+        btn.className = "opt-btn";
         btn.innerText = opt;
-        btn.onclick = () => selectOption(idx, btn);
-        container.appendChild(btn);
+        btn.onclick = () => selectOption(idx);
+        optsBox.appendChild(btn);
       });
     }
 
-    function selectOption(selectedIndex, btnElement) {
-      if (answered) return;
-      answered = true;
+    function selectOption(selectedIdx) {
+      const q = questions[currentIndex];
+      const buttons = document.querySelectorAll(".opt-btn");
+      buttons.forEach(btn => btn.disabled = true);
 
-      const q = questions[currentQuestion];
-      const buttons = document.querySelectorAll('.option-btn');
-
-      if (selectedIndex === q.correct) {
-        btnElement.classList.add('correct');
+      if (selectedIdx === q.answer) {
+        buttons[selectedIdx].classList.add("correct");
         score++;
+        document.getElementById("scoreCounter").innerText = `Score: ${score}`;
       } else {
-        btnElement.classList.add('wrong');
-        buttons[q.correct].classList.add('correct');
+        buttons[selectedIdx].classList.add("wrong");
+        if (buttons[q.answer]) buttons[q.answer].classList.add("correct");
       }
 
-      const expBox = document.getElementById('explanationText');
-      expBox.innerText = `💡 Explanation: ${q.exp}`;
-      expBox.style.display = 'block';
-
-      document.getElementById('nextBtn').style.display = 'inline-block';
+      const expBox = document.getElementById("explanationBox");
+      expBox.innerText = "💡 Note Context: " + q.explanation;
+      expBox.style.display = "block";
+      document.getElementById("nextBtn").style.display = "inline-block";
     }
 
     function nextQuestion() {
-      currentQuestion++;
-      if (currentQuestion < questions.length) {
-        renderQuestion();
+      currentIndex++;
+      if (currentIndex < questions.length) {
+        displayQuestion();
       } else {
-        showResults();
+        document.getElementById("quizCard").style.display = "none";
+        const resultBox = document.getElementById("resultBox");
+        resultBox.style.display = "block";
+        document.getElementById("finalScore").innerText = `${score}/${questions.length}`;
+        document.getElementById("resultMessage").innerText = `You scored ${score} out of ${questions.length} (${Math.round((score / questions.length) * 100)}%)!`;
+
+        let count = parseInt(localStorage.getItem("quizzesCompleted") || "0", 10);
+        localStorage.setItem("quizzesCompleted", count + 1);
       }
     }
 
-    function showResults() {
-      document.getElementById('quizContainer').style.display = 'none';
-      const scoreScreen = document.getElementById('scoreScreen');
-      scoreScreen.style.display = 'block';
-      document.getElementById('scoreCircle').innerText = `${score}/${questions.length}`;
-      document.getElementById('scoreSummary').innerText = `You scored ${score} out of ${questions.length} (${Math.round((score / questions.length) * 100)}%)!`;
-
-      // Save incremented completion count to localStorage
-      let currentCompleted = parseInt(localStorage.getItem("quizCompleted") || "0");
-      localStorage.setItem("quizCompleted", currentCompleted + 1);
-    }
-
     function restartQuiz() {
-      currentQuestion = 0;
+      document.getElementById("resultBox").style.display = "none";
+      document.getElementById("quizCard").style.display = "block";
+      currentIndex = 0;
       score = 0;
-      document.getElementById('scoreScreen').style.display = 'none';
-      document.getElementById('quizContainer').style.display = 'block';
-      renderQuestion();
+      displayQuestion();
     }
 
-    renderQuestion();
+    window.onload = loadQuiz();
   </script>
-
 </body>
 </html>

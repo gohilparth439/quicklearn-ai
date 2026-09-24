@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QuickLearn AI - Interactive Flashcards</title>
+  <title>Flashcards - QuickLearn AI</title>
   <style>
     * {
       margin: 0;
@@ -19,7 +19,6 @@
       display: flex;
     }
 
-    /* Sidebar Navigation */
     aside {
       width: 240px;
       background-color: #1e293b;
@@ -71,17 +70,17 @@
       text-align: center;
     }
 
-    /* Main Area */
     main {
       flex: 1;
       padding: 36px 40px;
+      overflow-y: auto;
       max-width: 800px;
       display: flex;
       flex-direction: column;
       align-items: center;
     }
 
-    .header-box {
+    .header-bar {
       width: 100%;
       margin-bottom: 24px;
     }
@@ -96,27 +95,15 @@
       font-size: 14px;
     }
 
-    .card-meta {
+    .card-scene {
       width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-      font-size: 14px;
-      color: #94a3b8;
-    }
-
-    /* 3D Flip Card Scene */
-    .scene {
-      width: 100%;
-      max-width: 580px;
-      height: 320px;
+      height: 290px;
       perspective: 1000px;
-      cursor: pointer;
       margin-bottom: 24px;
+      cursor: pointer;
     }
 
-    .card {
+    .card-inner {
       width: 100%;
       height: 100%;
       position: relative;
@@ -125,7 +112,7 @@
       border-radius: 16px;
     }
 
-    .card.is-flipped {
+    .card-inner.is-flipped {
       transform: rotateY(180deg);
     }
 
@@ -138,44 +125,44 @@
       padding: 32px;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
       border: 1px solid #334155;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
     }
 
-    .card-face-front {
-      background: linear-gradient(145deg, #1e293b, #0f172a);
+    .card-front {
+      background-color: #1e293b;
+      color: #f8fafc;
     }
 
-    .card-face-back {
-      background: linear-gradient(145deg, #0f172a, #1e293b);
-      transform: rotateY(180deg);
+    .card-back {
+      background-color: #082f49;
       border-color: #38bdf8;
+      color: #e0f2fe;
+      transform: rotateY(180deg);
     }
 
     .tag {
       font-size: 12px;
+      letter-spacing: 1px;
       font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
       color: #38bdf8;
+      margin-bottom: 14px;
     }
 
-    .card-content {
-      font-size: 20px;
+    .card-text {
+      font-size: 19px;
       font-weight: 600;
       line-height: 1.5;
-      text-align: center;
-      margin: auto 0;
     }
 
-    .card-hint {
-      font-size: 12px;
+    .hint {
+      font-size: 13px;
       color: #64748b;
-      text-align: center;
+      margin-top: 18px;
     }
 
-    /* Navigation Controls */
     .controls {
       display: flex;
       gap: 16px;
@@ -189,8 +176,8 @@
       color: #f8fafc;
       padding: 10px 20px;
       border-radius: 8px;
-      font-size: 14px;
       cursor: pointer;
+      font-size: 14px;
       font-weight: 600;
       transition: 0.2s;
     }
@@ -200,15 +187,26 @@
       color: #38bdf8;
     }
 
-    .btn-primary {
+    .card-counter {
+      color: #94a3b8;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .btn-master {
       background-color: #38bdf8;
       color: #0f172a;
       border: none;
+      padding: 12px 28px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
     }
 
-    .btn-primary:hover {
+    .btn-master:hover {
       opacity: 0.9;
-      color: #0f172a;
     }
   </style>
 </head>
@@ -226,31 +224,23 @@
   </aside>
 
   <main>
-    <div class="header-box">
-      <h1>Active Recall Flashcards</h1>
-      <p class="subtitle">Click on the card to flip and reveal the answer</p>
+    <div class="header-bar">
+      <h1>Active-Recall Flashcards</h1>
+      <p class="subtitle" id="flashSubtitle">Generating flashcards from your active notes...</p>
     </div>
 
-    <div class="card-meta">
-      <span id="cardCategory">Topic: General Studies</span>
-      <span id="counterDisplay">1 / 10</span>
-    </div>
-
-    <!-- 3D Flashcard -->
-    <div class="scene" onclick="flipCard()">
-      <div class="card" id="cardElement">
-        <!-- Front -->
-        <div class="card-face card-face-front">
-          <div class="tag">Question / Concept</div>
-          <div class="card-content" id="cardFrontText">Loading concept...</div>
-          <div class="card-hint">🔄 Click anywhere to flip</div>
+    <!-- 3D Spatial Flip Card -->
+    <div class="card-scene" onclick="flipCard()">
+      <div class="card-inner" id="cardElement">
+        <div class="card-face card-front">
+          <div class="tag">CONCEPT / TOPIC</div>
+          <div class="card-text" id="frontText">Loading notes...</div>
+          <div class="hint">Click to flip and reveal answer ↻</div>
         </div>
-
-        <!-- Back -->
-        <div class="card-face card-face-back">
-          <div class="tag" style="color: #22c55e;">Key Explanation / Answer</div>
-          <div class="card-content" id="cardBackText" style="color: #cbd5e1; font-size: 17px;">Loading explanation...</div>
-          <div class="card-hint">🔄 Click to flip back</div>
+        <div class="card-face card-back">
+          <div class="tag">EXPLANATION & DETAILS</div>
+          <div class="card-text" id="backText">Loading explanation...</div>
+          <div class="hint">Click to flip back ↺</div>
         </div>
       </div>
     </div>
@@ -258,91 +248,104 @@
     <!-- Controls -->
     <div class="controls">
       <button class="btn-ctrl" onclick="prevCard()">← Previous</button>
-      <button class="btn-ctrl btn-primary" onclick="flipCard()">Flip Card</button>
+      <span class="card-counter" id="counterDisplay">1 of 1</span>
       <button class="btn-ctrl" onclick="nextCard()">Next →</button>
     </div>
+
+    <button class="btn-master" onclick="markMastered()">✓ Mark as Mastered</button>
   </main>
 
   <script>
-    const deck = [
-      {
-        front: "What are the 4 fundamental ACID properties in databases?",
-        back: "Atomicity (all or nothing), Consistency (preserves rules), Isolation (independent transactions), and Durability (survives crashes)."
-      },
-      {
-        front: "What is Normalization and why is it used?",
-        back: "A database design technique that organizes tables to reduce data redundancy and eliminate insert, update, and delete anomalies."
-      },
-      {
-        front: "What is the average lookup time of a Binary Search Tree (BST)?",
-        back: "O(log n) on average. In worst-case skewed trees, it can degrade to O(n)."
-      },
-      {
-        front: "What is a 'Race Condition' in concurrent programming?",
-        back: "A flaw where multiple threads access shared resources simultaneously, producing unexpected results depending on execution order."
-      },
-      {
-        front: "What is Mutual Exclusion?",
-        back: "A concurrency control condition ensuring that only one process or thread enters a critical section at any given time."
-      },
-      {
-        front: "What is the difference between a Primary Key and a Foreign Key?",
-        back: "A Primary Key uniquely identifies a row in its own table. A Foreign Key references a Primary Key in another table to establish relationships."
-      },
-      {
-        front: "How does an AVL Tree maintain balance?",
-        back: "Through left and right tree rotations whenever the balance factor between child subtree heights exceeds +1 or falls below -1."
-      },
-      {
-        front: "What is Deadlock in an Operating System?",
-        back: "A state where a group of processes are permanently blocked because each is holding a resource and waiting for another resource held by another process."
-      },
-      {
-        front: "What does the SQL 'HAVING' clause do?",
-        back: "Filters grouped rows after aggregate functions (e.g., COUNT, SUM) are computed, unlike WHERE which filters individual rows before grouping."
-      },
-      {
-        front: "What is Active Recall and Spaced Repetition?",
-        back: "Active recall forces the brain to retrieve information from memory, while spaced repetition reviews facts at expanding intervals to lock them into long-term memory."
+    let flashcards = [];
+    let currentIndex = 0;
+
+    // Dynamically cuts clauses and definitions from any input note
+    function parseDynamicFlashcards(text) {
+      const clauses = text
+        .split(/[.;\n]+/)
+        .map(s => s.trim())
+        .filter(s => s.length > 18);
+
+      if (clauses.length === 0) {
+        return [{ front: "Active Study Concept", back: text }];
       }
-    ];
 
-    let currentCardIndex = 0;
-    const cardEl = document.getElementById("cardElement");
-    const frontText = document.getElementById("cardFrontText");
-    const backText = document.getElementById("cardBackText");
-    const counterDisplay = document.getElementById("counterDisplay");
+      return clauses.map((clause) => {
+        const match = clause.match(/^(.+?)\s+(is|are|means|refers to|defines|uses|guarantees|:)\s+(.+)$/i);
+        if (match) {
+          return {
+            front: match[1].trim() + "?",
+            back: `${match[2].toUpperCase()}: ${match[3].trim()}`
+          };
+        } else {
+          const words = clause.split(/\s+/);
+          const frontPart = words.slice(0, 4).join(" ");
+          const backPart = words.slice(4).join(" ");
+          return {
+            front: `Concept: ${frontPart}...`,
+            back: backPart || clause
+          };
+        }
+      });
+    }
 
-    function renderCard() {
-      // Reset flip back to front
-      cardEl.classList.remove("is-flipped");
+    async function loadFlashcards() {
+      const currentNotes = localStorage.getItem("studyText") || "Data Structures, Database Schemas, and Process Scheduling.";
 
-      const card = deck[currentCardIndex];
-      frontText.innerText = card.front;
-      backText.innerText = card.back;
-      counterDisplay.innerText = `${currentCardIndex + 1} / ${deck.length}`;
+      try {
+        const response = await fetch("http://localhost:3000/api/flashcards", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: currentNotes })
+        });
+        if (!response.ok) throw new Error();
+        flashcards = await response.json();
+      } catch (err) {
+        flashcards = parseDynamicFlashcards(currentNotes);
+      }
+
+      document.getElementById("flashSubtitle").innerText = `Created from your active notes (${flashcards.length} cards)`;
+      currentIndex = 0;
+      updateCardUI();
     }
 
     function flipCard() {
-      cardEl.classList.toggle("is-flipped");
+      document.getElementById("cardElement").classList.toggle("is-flipped");
+    }
+
+    function updateCardUI() {
+      if (!flashcards.length) return;
+      document.getElementById("cardElement").classList.remove("is-flipped");
+
+      setTimeout(() => {
+        document.getElementById("frontText").innerText = flashcards[currentIndex].front;
+        document.getElementById("backText").innerText = flashcards[currentIndex].back;
+        document.getElementById("counterDisplay").innerText = `${currentIndex + 1} of ${flashcards.length}`;
+      }, 150);
     }
 
     function nextCard() {
-      if (currentCardIndex < deck.length - 1) {
-        currentCardIndex++;
-        renderCard();
+      if (currentIndex < flashcards.length - 1) {
+        currentIndex++;
+        updateCardUI();
       }
     }
 
     function prevCard() {
-      if (currentCardIndex > 0) {
-        currentCardIndex--;
-        renderCard();
+      if (currentIndex > 0) {
+        currentIndex--;
+        updateCardUI();
       }
     }
 
-    renderCard();
-  </script>
+    function markMastered() {
+      let count = parseInt(localStorage.getItem("cardsMastered") || "0", 10);
+      localStorage.setItem("cardsMastered", count + 1);
+      alert("Card marked as mastered! Added to your dashboard stats.");
+      nextCard();
+    }
 
+    window.onload = loadFlashcards;
+  </script>
 </body>
 </html>
