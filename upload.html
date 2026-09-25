@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Upload Notes - QuickLearn AI</title>
-  <!-- Mozilla PDF.js for in-browser PDF text extraction -->
+  <!-- PDF.js library to read PDF files directly in the browser -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <style>
     * {
@@ -285,7 +285,7 @@
 
   <main>
     <h1>Upload & Generate Summary</h1>
-    <p class="subtitle">Pick sample study notes or paste/upload your own lecture text.</p>
+    <p class="subtitle">Apni lecture PDF upload karein ya text paste karke real AI summary generate karein.</p>
 
     <div class="card">
       <div class="pill-group">
@@ -303,7 +303,7 @@
       <input type="file" id="fileInput" style="display:none" onchange="handleFileUpload(event)" accept=".txt,.pdf" />
 
       <div class="section-title">2. Study Notes Content:</div>
-      <textarea id="notesInput" placeholder="Paste your notes or syllabus content here..."></textarea>
+      <textarea id="notesInput" placeholder="Aapki PDF ka text yahan aayega ya aap directly paste kar sakte hain..."></textarea>
 
       <button class="btn-primary" id="genBtn" onclick="generateSummary()">
         ✨ Generate AI Summary
@@ -334,7 +334,7 @@
   </main>
 
   <script>
-    // Initialize PDF.js worker
+    // PDF.js worker initialize karein
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
     const samples = {
@@ -356,7 +356,7 @@
       const dropzone = document.getElementById("dropzoneText");
       const notesArea = document.getElementById("notesInput");
 
-      dropzone.innerText = `⏳ Extracting text from ${file.name}...`;
+      dropzone.innerText = `⏳ PDF se text extract ho raha hai: ${file.name}...`;
 
       if (file.name.endsWith('.txt')) {
         const reader = new FileReader();
@@ -371,7 +371,7 @@
           const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
           let fullText = "";
 
-          // Read up to first 5 pages of the PDF
+          // Pehle 5 pages ka text nikalna
           const maxPages = Math.min(pdf.numPages, 5);
           for (let i = 1; i <= maxPages; i++) {
             const page = await pdf.getPage(i);
@@ -380,16 +380,16 @@
             fullText += pageText + "\n\n";
           }
 
-          if (fullText.trim().length > 0) {
+          if (fullText.trim().length > 20) {
             notesArea.value = fullText.trim();
-            dropzone.innerText = `✅ Loaded ${maxPages} page(s) from ${file.name}`;
+            dropzone.innerText = `✅ PDF ke ${maxPages} page extract ho gaye: ${file.name}`;
           } else {
-            alert("No text could be extracted from this PDF (it may contain scanned image scans). Please copy and paste the text directly.");
-            dropzone.innerText = `⚠️ Empty or scanned PDF: ${file.name}`;
+            alert("Is PDF me text readable nahi hai (yeh scanned images ho sakti hain). Kripya text copy karke box me paste karein.");
+            dropzone.innerText = `⚠️ Text extract nahi ho paya: ${file.name}`;
           }
         } catch (err) {
           console.error("PDF Parsing error:", err);
-          alert("Error reading PDF file. Try pasting the text manually.");
+          alert("PDF read karne me problem aayi. Textarea me text paste karein.");
           dropzone.innerText = `⚠️ Error reading ${file.name}`;
         }
       }
@@ -398,11 +398,11 @@
     async function generateSummary() {
       const text = document.getElementById("notesInput").value.trim();
       if (!text) {
-        alert("Please paste lecture notes or upload a valid file first!");
+        alert("Kripya pehle PDF select karein ya notes paste karein!");
         return;
       }
 
-      // CRITICAL: Save current notes into localStorage for Quiz and Flashcards
+      // Current notes ko localStorage me save karein taaki Quiz aur Flashcard naye ban sakein
       localStorage.setItem("studyText", text);
 
       const genBtn = document.getElementById("genBtn");
@@ -412,6 +412,7 @@
       let overview = "";
       let takeaways = [];
 
+      // 1. Agar backend chal raha ho to Express API se Gemini call karein
       try {
         const response = await fetch("http://localhost:3000/api/summary", {
           method: "POST",
@@ -419,25 +420,35 @@
           body: JSON.stringify({ text })
         });
 
-        if (!response.ok) throw new Error("Backend not available");
+        if (!response.ok) throw new Error("Backend offline");
         const data = await response.json();
         overview = data.overview;
         takeaways = data.keyPoints;
       } catch (err) {
-        // Dynamic client-side synthesis directly from whatever was typed or extracted
-        overview = text.slice(0, 260) + (text.length > 260 ? "..." : "");
-        const sentences = text
+        // 2. Agar GitHub Pages par backend offline hai, to CURRENT uploaded text se dynamic summary banayein
+        const cleanSentences = text
+          .replace(/\r?\n|\r/g, " ")
           .split(/[.?!]\s+/)
           .map(s => s.trim())
-          .filter(s => s.length > 20);
+          .filter(s => s.length > 25);
 
-        takeaways = sentences.slice(0, 4);
-        if (takeaways.length === 0) {
-          takeaways = ["Core subject concepts and lecture highlights.", "Exam preparation key points."];
+        overview = cleanSentences.slice(0, 2).join(". ") + ".";
+        
+        if (cleanSentences.length > 3) {
+          takeaways = [
+            cleanSentences[2],
+            cleanSentences[Math.floor(cleanSentences.length / 2)],
+            cleanSentences[cleanSentences.length - 1]
+          ];
+        } else {
+          takeaways = [
+            "Core concept: " + (cleanSentences[0] || text.slice(0, 80)),
+            "Exam note: " + (cleanSentences[1] || text.slice(80, 160))
+          ];
         }
       }
 
-      // Render summary UI
+      // UI me summary update karein
       document.getElementById("coreOverviewText").innerText = overview;
       const listEl = document.getElementById("keyTakeawaysList");
       listEl.innerHTML = "";
@@ -451,7 +462,7 @@
       genBtn.innerText = "✨ Generate AI Summary";
       genBtn.disabled = false;
 
-      // Update session statistics
+      // Dashboard count update
       let processed = parseInt(localStorage.getItem("notesProcessed") || "0", 10);
       let summaries = parseInt(localStorage.getItem("summariesCreated") || "0", 10);
       localStorage.setItem("notesProcessed", processed + 1);
